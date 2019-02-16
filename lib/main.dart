@@ -163,8 +163,8 @@ class CharacterState extends State<Character> {
         Positioned(
           child: FloatingActionButton(
             onPressed: _resetPoints,
-            tooltip: 'Increment',
-            child: Icon(Icons.add),
+            tooltip: 'Clear',
+            child: Icon(Icons.refresh),
           ),
           bottom: 16,
           right: 16,
