@@ -71,41 +71,105 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Kamu telah menekan tombolnya sebanyak:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+      body: new Character(),
+      
+      // Center(
+      //   // Center is a layout widget. It takes a single child and positions it
+      //   // in the middle of the parent.
+      //   child: Column(
+      //     // Column is also layout widget. It takes a list of children and
+      //     // arranges them vertically. By default, it sizes itself to fit its
+      //     // children horizontally, and tries to be as tall as its parent.
+      //     //
+      //     // Invoke "debug painting" (press "p" in the console, choose the
+      //     // "Toggle Debug Paint" action from the Flutter Inspector in Android
+      //     // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+      //     // to see the wireframe for each widget.
+      //     //
+      //     // Column has various properties to control how it sizes itself and
+      //     // how it positions its children. Here we use mainAxisAlignment to
+      //     // center the children vertically; the main axis here is the vertical
+      //     // axis because Columns are vertical (the cross axis would be
+      //     // horizontal).
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: <Widget>[
+      //       Text(
+      //         'Kamu telah menekan tombolnya sebanyak:',
+      //       ),
+      //       Text(
+      //         '$_counter',
+      //         style: Theme.of(context).textTheme.display1,
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class CharacterPainter extends CustomPainter {
+  CharacterPainter(this.points);
+
+  final List<Offset> points;
+
+  void paint(Canvas canvas, Size size) {
+    Paint paint = new Paint()
+      ..color = Colors.black
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 5.0;
+    for (int i = 0; i < points.length - 1; i++) {
+      if (points[i] != null && points[i + 1] != null)
+        canvas.drawLine(points[i], points[i + 1], paint);
+    }
+  }
+
+  bool shouldRepaint(CharacterPainter other) => other.points != points;
+}
+
+class Character extends StatefulWidget {
+  CharacterState createState() => new CharacterState();
+}
+
+class CharacterState extends State<Character> {
+  List<Offset> _points = <Offset>[];
+
+  void _resetPoints () {
+    setState(() {
+      _points = [];
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return new Stack(
+      children: [
+        GestureDetector(
+          onPanUpdate: (DragUpdateDetails details) {
+            RenderBox referenceBox = context.findRenderObject();
+            Offset localPosition =
+                referenceBox.globalToLocal(details.globalPosition);
+
+            setState(() {
+              _points = new List.from(_points)..add(localPosition);
+            });
+          },
+          onPanEnd: (DragEndDetails details) => _points.add(null),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        CustomPaint(painter: new CharacterPainter(_points)),
+        Positioned(
+          child: FloatingActionButton(
+            onPressed: _resetPoints,
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
+          bottom: 16,
+          right: 16,
+        )
+      ],
     );
   }
 }
