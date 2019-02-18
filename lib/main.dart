@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chara/Character/Character.dart';
+import 'package:chara/character/Character.dart';
 
 void main() => runApp(MyApp());
 
