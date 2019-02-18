@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'Character.dart';
 import 'CharacterPainter.dart';
-
-class Character extends StatefulWidget {
-  CharacterState createState() => new CharacterState();
-}
 
 class CharacterState extends State<Character> {
   List<Offset> _points = <Offset>[];
+
+  void _resetPoints () {
+    setState(() {
+      _points = [];
+    });
+  }
 
   Widget build(BuildContext context) {
     return new Stack(
@@ -23,7 +26,16 @@ class CharacterState extends State<Character> {
           },
           onPanEnd: (DragEndDetails details) => _points.add(null),
         ),
-        CustomPaint(painter: CharacterPainter(_points), size: Size.infinite),
+        CustomPaint(painter: new CharacterPainter(_points)),
+        Positioned(
+          child: FloatingActionButton(
+            onPressed: _resetPoints,
+            tooltip: 'Clear',
+            child: Icon(Icons.refresh),
+          ),
+          bottom: 16,
+          right: 16,
+        )
       ],
     );
   }
