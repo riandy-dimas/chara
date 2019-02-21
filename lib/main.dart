@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:chara/character/Character.dart';
-
 import 'package:chara/painter/Painter.dart';
 
 void main() => runApp(MyApp());
