@@ -75,8 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Painter(_controller),
       floatingActionButton: new FloatingActionButton(
         onPressed: _controller.undo,
-        tooltip: 'Clear',
-        child: Icon(Icons.refresh),
+        tooltip: 'Undo',
+        child: Icon(Icons.undo),
       ),
     );
   }
