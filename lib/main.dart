@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
+        primaryColor: Colors.pink.shade900,
+        secondaryHeaderColor: Colors.pink.shade900,
       ),
       home: MyHomePage(title: 'Chara: Tulis Karakter'),
     );
@@ -77,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _controller.undo,
         tooltip: 'Undo',
         child: Icon(Icons.undo),
+        backgroundColor: Colors.pink.shade900,
+        foregroundColor: Colors.pink.shade50,
       ),
     );
   }
