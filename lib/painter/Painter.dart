@@ -222,10 +222,8 @@ class PainterController extends ChangeNotifier{
   }
 
   void undo(){
-    if(!isFinished()) {
-      _pathHistory.undo();
-      notifyListeners();
-    }
+    _pathHistory.undo();
+    notifyListeners();
   }
 
   void _notifyListeners(){

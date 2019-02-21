@@ -119,6 +119,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: <Widget>[
           IconButton(
+            icon: Icon(Icons.undo),
+            tooltip: 'Undo',
+            onPressed: _controller.undo,
+          ),
+          IconButton(
             icon: Icon(Icons.refresh),
             tooltip: 'Reset',
             onPressed: _controller.startAgain,
