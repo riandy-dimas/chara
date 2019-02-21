@@ -3,7 +3,10 @@ import 'dart:ui';
 
 class PathContainer {
   List<MapEntry<Path, Paint>> _paths;
-  Paint _newPaint;
+  Paint _newPaint = new Paint()
+                        ..color = Colors.black
+                        ..strokeCap = StrokeCap.round
+                        ..strokeWidth = 5.0;
   Paint _background;
   bool _isDragging;
 
@@ -56,7 +59,7 @@ class PathContainer {
     }
   }
 
-  void endDraw (Offset point) {
+  void endDraw () {
     endDrag();
   }
 

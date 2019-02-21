@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:chara/character/Character.dart';
 
+import 'package:chara/painter/Painter.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -45,13 +47,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  bool _finished;
+  PainterController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _finished=false;
+    _controller=_newController();
+  }
+
+  PainterController _newController(){
+    PainterController controller=new PainterController();
+    controller.thickness=5.0;
+    controller.backgroundColor=Colors.white;
+    controller.strokeCap=StrokeCap.round;
+    return controller;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: new Character(),
+      body: new Painter(_controller),
     );
   }
 }

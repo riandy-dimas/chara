@@ -8,6 +8,7 @@ class CharacterPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = new Paint()
       ..color = Colors.black
+      ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 5.0;
     for (int i = 0; i < points.length - 1; i++) {
