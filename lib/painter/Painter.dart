@@ -28,9 +28,9 @@ class _PainterState extends State<Painter> {
   }
 
   Size _finish(){
-    setState((){
-      _finished=true;
-    });
+    // setState((){
+    //   _finished=true;
+    // });
     return context.size;
   }
 
@@ -239,10 +239,15 @@ class PainterController extends ChangeNotifier{
     }
   }
 
+  void startAgain() {
+    _cached = null;
+    _pathHistory.clear();
+  }
+
   PictureDetails finish(){
-    if(!isFinished()){
+    // if(!isFinished()){
       _cached=_render(_widgetFinish());
-    }
+    // }
     return _cached;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:chara/painter/Painter.dart';
+import 'dart:typed_data';
 
 void main() => runApp(MyApp());
 
@@ -66,6 +67,51 @@ class _MyHomePageState extends State<MyHomePage> {
     return controller;
   }
 
+  void _doFinish (PictureDetails picture, BuildContext context) {
+    _show(picture, context);
+  }
+
+  void _show(PictureDetails picture, BuildContext context){
+      Navigator.of(context).push(
+          new MaterialPageRoute(builder: (BuildContext context){
+            return new Scaffold(
+              appBar: new AppBar(
+                title: const Text('Result'),
+              ),
+              body: new Container(
+                  alignment: Alignment.center,
+                  child:new FutureBuilder<Uint8List>(
+                    future:picture.toPNG(),
+                    builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot){
+                      switch (snapshot.connectionState)
+                      {
+                        case ConnectionState.done:
+                          if (snapshot.hasError){
+                            return new Text('Error: ${snapshot.error}');
+                          }else{
+                            return Image.memory(snapshot.data);
+                          }
+                          break;
+                        default:
+                          return new Container(
+                              child:new FractionallySizedBox(
+                                widthFactor: 0.1,
+                                child: new AspectRatio(
+                                    aspectRatio: 1.0,
+                                    child: new CircularProgressIndicator()
+                                ),
+                                alignment: Alignment.center,
+                              )
+                          );
+                      }
+                    },
+                  )
+              ),
+            );
+          })
+      );
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,15 +121,15 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.refresh),
             tooltip: 'Reset',
-            onPressed: _controller.clear,
+            onPressed: _controller.startAgain,
           ),
         ],
       ),
       body: new Painter(_controller),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _controller.undo,
-        tooltip: 'Undo',
-        child: Icon(Icons.undo),
+        onPressed: () => _doFinish(_controller.finish(), context),
+        tooltip: 'Done',
+        child: Icon(Icons.check),
         backgroundColor: Colors.pink.shade900,
         foregroundColor: Colors.white,
         mini: true,
