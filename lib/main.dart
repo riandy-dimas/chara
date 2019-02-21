@@ -79,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.undo),
         backgroundColor: Colors.pink.shade900,
         foregroundColor: Colors.white,
+        mini: true,
       ),
     );
   }
