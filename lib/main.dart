@@ -22,11 +22,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
         primaryColor: Colors.pink.shade900,
         secondaryHeaderColor: Colors.pink.shade900,
-        primaryTextTheme: TextTheme(
-          button: TextStyle(
-            color: Colors.pink.shade50
-          ),
-        )
       ),
       home: MyHomePage(title: 'Chara: Tulis Karakter'),
     );
@@ -83,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Undo',
         child: Icon(Icons.undo),
         backgroundColor: Colors.pink.shade900,
-        foregroundColor: Colors.pink.shade50,
+        foregroundColor: Colors.white,
       ),
     );
   }
