@@ -73,6 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: new Painter(_controller),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: _controller.undo,
+        tooltip: 'Clear',
+        child: Icon(Icons.refresh),
+      ),
     );
   }
 }
