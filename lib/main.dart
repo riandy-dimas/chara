@@ -71,6 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            tooltip: 'Reset',
+            onPressed: _controller.clear,
+          ),
+        ],
       ),
       body: new Painter(_controller),
       floatingActionButton: new FloatingActionButton(
