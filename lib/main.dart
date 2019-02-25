@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:chara/painter/Painter.dart';
+import 'dart:typed_data';
 
 void main() => runApp(MyApp());
 
@@ -18,7 +20,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
+        primaryColor: Colors.pink.shade900,
+        secondaryHeaderColor: Colors.pink.shade900,
       ),
       home: MyHomePage(title: 'Chara: Tulis Karakter'),
     );
@@ -44,132 +48,97 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  bool _finished;
+  PainterController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _finished=false;
+    _controller=_newController();
   }
+
+  PainterController _newController(){
+    PainterController controller=new PainterController();
+    controller.thickness=5.0;
+    controller.backgroundColor=Colors.white;
+    controller.strokeCap=StrokeCap.round;
+    return controller;
+  }
+
+  void _doFinish (PictureDetails picture, BuildContext context) {
+    _show(picture, context);
+  }
+
+  void _show(PictureDetails picture, BuildContext context){
+      Navigator.of(context).push(
+          new MaterialPageRoute(builder: (BuildContext context){
+            return new Scaffold(
+              appBar: new AppBar(
+                title: const Text('Result'),
+              ),
+              body: new Container(
+                  alignment: Alignment.center,
+                  child:new FutureBuilder<Uint8List>(
+                    future:picture.toPNG(),
+                    builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot){
+                      switch (snapshot.connectionState)
+                      {
+                        case ConnectionState.done:
+                          if (snapshot.hasError){
+                            return new Text('Error: ${snapshot.error}');
+                          }else{
+                            return Image.memory(snapshot.data);
+                          }
+                          break;
+                        default:
+                          return new Container(
+                              child:new FractionallySizedBox(
+                                widthFactor: 0.1,
+                                child: new AspectRatio(
+                                    aspectRatio: 1.0,
+                                    child: new CircularProgressIndicator()
+                                ),
+                                alignment: Alignment.center,
+                              )
+                          );
+                      }
+                    },
+                  )
+              ),
+            );
+          })
+      );
+    }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
-      ),
-      body: new Character(),
-      
-      // Center(
-      //   // Center is a layout widget. It takes a single child and positions it
-      //   // in the middle of the parent.
-      //   child: Column(
-      //     // Column is also layout widget. It takes a list of children and
-      //     // arranges them vertically. By default, it sizes itself to fit its
-      //     // children horizontally, and tries to be as tall as its parent.
-      //     //
-      //     // Invoke "debug painting" (press "p" in the console, choose the
-      //     // "Toggle Debug Paint" action from the Flutter Inspector in Android
-      //     // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-      //     // to see the wireframe for each widget.
-      //     //
-      //     // Column has various properties to control how it sizes itself and
-      //     // how it positions its children. Here we use mainAxisAlignment to
-      //     // center the children vertically; the main axis here is the vertical
-      //     // axis because Columns are vertical (the cross axis would be
-      //     // horizontal).
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       Text(
-      //         'Kamu telah menekan tombolnya sebanyak:',
-      //       ),
-      //       Text(
-      //         '$_counter',
-      //         style: Theme.of(context).textTheme.display1,
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class CharacterPainter extends CustomPainter {
-  CharacterPainter(this.points);
-
-  final List<Offset> points;
-
-  void paint(Canvas canvas, Size size) {
-    Paint paint = new Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 5.0;
-    for (int i = 0; i < points.length - 1; i++) {
-      if (points[i] != null && points[i + 1] != null)
-        canvas.drawLine(points[i], points[i + 1], paint);
-    }
-  }
-
-  bool shouldRepaint(CharacterPainter other) => other.points != points;
-}
-
-class Character extends StatefulWidget {
-  CharacterState createState() => new CharacterState();
-}
-
-class CharacterState extends State<Character> {
-  List<Offset> _points = <Offset>[];
-
-  void _resetPoints () {
-    setState(() {
-      _points = [];
-    });
-  }
-
-  Widget build(BuildContext context) {
-    return new Stack(
-      children: [
-        GestureDetector(
-          onPanUpdate: (DragUpdateDetails details) {
-            RenderBox referenceBox = context.findRenderObject();
-            Offset localPosition =
-                referenceBox.globalToLocal(details.globalPosition);
-
-            setState(() {
-              _points = new List.from(_points)..add(localPosition);
-            });
-          },
-          onPanEnd: (DragEndDetails details) => _points.add(null),
-        ),
-        CustomPaint(painter: new CharacterPainter(_points)),
-        Positioned(
-          child: FloatingActionButton(
-            onPressed: _resetPoints,
-            tooltip: 'Clear',
-            child: Icon(Icons.refresh),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.undo),
+            tooltip: 'Undo',
+            onPressed: _controller.undo,
           ),
-          bottom: 16,
-          right: 16,
-        )
-      ],
+          IconButton(
+            icon: Icon(Icons.refresh),
+            tooltip: 'Reset',
+            onPressed: _controller.startAgain,
+          ),
+        ],
+      ),
+      body: new Painter(_controller),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: () => _doFinish(_controller.finish(), context),
+        tooltip: 'Done',
+        child: Icon(Icons.check),
+        backgroundColor: Colors.pink.shade900,
+        foregroundColor: Colors.white,
+        mini: true,
+      ),
     );
   }
 }
