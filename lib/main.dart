@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chara/painter/Painter.dart';
+import 'package:Chara/painter/Painter.dart';
 import 'dart:typed_data';
 
 void main() => runApp(MyApp());
@@ -49,13 +49,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  bool _finished;
+  // bool _finished;
   PainterController _controller;
 
   @override
   void initState() {
     super.initState();
-    _finished=false;
+    // _finished=false;
     _controller=_newController();
   }
 

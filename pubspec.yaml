@@ -1,5 +1,5 @@
-name: chara
-description: A new Flutter project.
+name: Chara
+description: An apps for draw and match non-roman character.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -23,6 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.0
 
 
 # For information on the generic Dart part of this file, see the
@@ -66,3 +67,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+
+flutter_icons:
+  image_path: "assets/icon/default_icon.png"
+  android: true
+  ios: true
